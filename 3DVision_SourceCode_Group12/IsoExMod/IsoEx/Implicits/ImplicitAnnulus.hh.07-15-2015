@@ -1,0 +1,114 @@
+/*===========================================================================*\
+ *                                                                           *
+ *                                IsoEx                                      *
+ *        Copyright (C) 2002 by Computer Graphics Group, RWTH Aachen         *
+ *                         www.rwth-graphics.de                              *
+ *                                                                           *
+ *---------------------------------------------------------------------------* 
+ *                                                                           *
+ *                                License                                    *
+ *                                                                           *
+ *  This library is free software; you can redistribute it and/or modify it  *
+ *  under the terms of the GNU Library General Public License as published   *
+ *  by the Free Software Foundation, version 2.                              *
+ *                                                                           *
+ *  This library is distributed in the hope that it will be useful, but      *
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of               *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU        *
+ *  Library General Public License for more details.                         *
+ *                                                                           *
+ *  You should have received a copy of the GNU Library General Public        *
+ *  License along with this library; if not, write to the Free Software      *
+ *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                *
+ *                                                                           *
+\*===========================================================================*/
+
+//=============================================================================
+//
+//  CLASS ImplicitAnnulus
+//
+//=============================================================================
+
+
+#ifndef ISOEX_IMPLICITANNULUS_HH
+#define ISOEX_IMPLICITANNULUS_HH
+
+
+//== INCLUDES =================================================================
+
+#include "Implicit.hh"
+#include "ImplicitDoublePlanes.hh"
+#include "ImplicitOpenCylinder.hh"
+#include "csg.hh"
+#include <IsoEx/Config/IsoExDefines.hh>
+
+//== NAMESPACES ===============================================================
+
+namespace IsoEx {
+
+//== CLASS DEFINITION =========================================================
+
+	      
+/** \class ImplicitAnnulus ImplicitAnnulus.hh <IsoEx/Implicits/ImplicitAnnulus.hh>
+    This class implements an annulus given its center, direction, radius and height.
+    \see IsoEx::Implicit
+    \ingroup implicits
+*/	      
+
+template< class Vec3>
+class ImplicitAnnulus : public Implicit<Vec3>
+{
+public:
+
+  typedef typename Vec3::value_type real;
+   
+  /// Constructor
+  ImplicitAnnulus(const Vec3& _center, const Vec3& _dir, const real _radius, 
+                  const real _width, const real _height):
+    bounding_planes_(_center, _dir, _height),
+    open_cylinder1_(_center, _dir, _radius+_width/2.0),
+    open_cylinder2_(_center, _dir, _radius-_width/2.0),
+    diff_ocyl1_ocyl2_(open_cylinder1_, open_cylinder2_),
+    annulus_(diff_ocyl1_ocyl2_, bounding_planes_)
+  {}
+
+
+  /// \name Mandatory interface of implicit objects, see also IsoEx::Implicit.
+  //@{
+
+  bool   is_inside(const Vec3& _p) const {
+    return annulus_.is_inside(_p);
+  }
+
+  real  scalar_distance(const Vec3& _p) const {
+    return annulus_.scalar_distance(_p);
+  }
+
+  bool   directed_distance(const Vec3&  _p0,
+                           const Vec3&  _p1,
+                           Vec3&        _point,
+                           Vec3&        _normal,
+                           real&        _distance) const
+  {
+    return annulus_.directed_distance(_p0, _p1, _point, _normal, _distance);
+  }
+
+  //@}
+
+protected:
+
+  // Note: The order below matters.  Classes are initialized in order.
+  ImplicitDoublePlanes<Vec3>   bounding_planes_;
+  ImplicitOpenCylinder<Vec3>   open_cylinder1_;
+  ImplicitOpenCylinder<Vec3>   open_cylinder2_;
+  CSG::Difference<Vec3>        diff_ocyl1_ocyl2_;
+  CSG::Intersection<Vec3>      annulus_;
+};
+
+
+//=============================================================================
+} // namespace IsoEx
+//=============================================================================
+#endif // ISOEX_IMPLICITANNULUS_HH defined
+//=============================================================================
+

@@ -1,0 +1,12 @@
+This is a sample implementation of the Extended Marching Cubes algorithm
+from https://www.graphics.rwth-aachen.de/IsoEx modified by R. Wenger
+to generate cubes, annuli and flanges.
+
+The new code is in Apps2/emc_poly.
+
+Please refer to http://www.graphics.rwth-aachen.de/IsoEx/ for details
+on the original IsoEx implementation.
+
+This code requires OpenMesh from www.openmesh.org.
+This code should be placed in directory IsoEx.
+OpenMesh and IsoEx must be in the same directory for the includes to work.

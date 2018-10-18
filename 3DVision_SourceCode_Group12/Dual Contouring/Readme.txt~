@@ -1,0 +1,7 @@
+# Follow these instructions to run dual contouring algorithm on a simple implicit cube.
+
+1. Open both test.pyc and Dual_Contour1.pyc and check if the dependencies are installed, especially mayavi.
+2. The u.txt file contains the scalar distance values. Make sure it is in the same folder as the python code.
+3. Make sure Dual_Contour1.pyc and test.pyc are also in the same folder.
+4. Open test.pyc with idle (or any other python GUI) and run it. Alternatively run it directly thorugh console.
+5. Wait for sometime. After the code ends, the resulting mesh will be saved in test_result.wrl.
