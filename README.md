@@ -21,7 +21,6 @@ make -j4
 
 # Using the code ##############################################################
 
-- 
 Example for the cube dataset "datasets/cube"
 - "depthMaps" contains the depth maps and normals (raw and visualization)
 - use --help to get some information about the 
